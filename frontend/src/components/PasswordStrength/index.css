@@ -1,0 +1,26 @@
+/* src/components/PasswordStrength/index.css */
+
+.strength-meter-container {
+    margin-bottom: 1.25rem;
+    width: 100%;
+}
+
+.strength-meter-track {
+    height: 4px;
+    width: 100%;
+    background-color: var(--border-color);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.strength-meter-fill {
+    height: 100%;
+    transition: all 0.3s ease;
+}
+
+.strength-meter-text {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    display: block;
+    margin-top: 0.35rem;
+}

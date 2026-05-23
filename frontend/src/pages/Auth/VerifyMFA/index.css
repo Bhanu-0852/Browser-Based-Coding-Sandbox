@@ -1,0 +1,59 @@
+/* src/pages/Auth/VerifyMFA/index.css */
+
+/* --- Layout & Typography --- */
+.mfa-panel {
+    text-align: center;
+}
+
+.mfa-icon-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.mfa-icon-bg {
+    background: rgba(16, 185, 129, 0.1);
+    padding: 1rem;
+    border-radius: 50%;
+}
+
+.mfa-title {
+    margin-bottom: 0.5rem;
+}
+
+.mfa-subtitle {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.mfa-submit-btn {
+    margin-top: 1rem;
+}
+
+/* --- OTP Input Grid --- */
+.otp-container {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin: 1.5rem 0;
+}
+
+.otp-input {
+    width: 45px;
+    height: 50px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+}
+
+.otp-input:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    outline: none;
+}

@@ -1,0 +1,200 @@
+/* src/pages/Sandbox/index.css */
+
+/* ✨ NEW: CSS Variables mapping the theme colors */
+:root {
+    --sb-bg: #1e1e1e;
+    --sb-header: #252526;
+    --sb-border: #333333;
+    --sb-text: #cccccc;
+    --sb-text-title: #ffffff;
+    --sb-text-muted: #969696;
+    --sb-hover: rgba(255, 255, 255, 0.05);
+    --sb-preview-bg: #ffffff;
+}
+
+/* ✨ NEW: Light Mode Overrides (Matches standard ThemeToggle behavior) */
+:root[data-theme="light"],
+.light,
+.light-mode {
+    --sb-bg: #f3f4f6;
+    --sb-header: #ffffff;
+    --sb-border: #e5e7eb;
+    --sb-text: #374151;
+    --sb-text-title: #111827;
+    --sb-text-muted: #6b7280;
+    --sb-hover: rgba(0, 0, 0, 0.05);
+}
+
+/* --- Layout Foundations --- */
+.sandbox-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: var(--sb-bg);
+    color: var(--sb-text);
+    overflow: hidden;
+    font-family: system-ui, -apple-system, sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* --- Top Header --- */
+.sandbox-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    padding: 0 1.5rem;
+    background-color: var(--sb-header);
+    border-bottom: 1px solid var(--sb-border);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.sandbox-header-left,
+.sandbox-header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.sandbox-title {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--sb-text-title);
+    letter-spacing: 0.5px;
+}
+
+.user-email-display {
+    font-size: 0.85rem;
+    color: var(--sb-text-muted);
+    padding-right: 1rem;
+    border-right: 1px solid var(--sb-border);
+}
+
+/* --- Main Workspace (3 Columns) --- */
+.sandbox-workspace {
+    display: flex;
+    flex: 1;
+    height: calc(100vh - 60px);
+}
+
+/* 1. Sidebar */
+.sandbox-sidebar {
+    width: 220px;
+    background-color: var(--sb-header);
+    border-right: 1px solid var(--sb-border);
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.sidebar-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--sb-text-muted);
+    padding: 0 1.5rem 0.75rem;
+    margin: 0;
+}
+
+.file-tab {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 1.5rem;
+    background: transparent;
+    border: none;
+    border-left: 3px solid transparent; 
+    color: var(--sb-text);
+    cursor: pointer;
+    text-align: left;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.file-tab:hover {
+    background-color: var(--sb-hover);
+    color: var(--sb-text-title);
+}
+
+.file-tab.active {
+    background-color: rgba(59, 130, 246, 0.1); 
+    color: #3b82f6; 
+    border-left: 3px solid #3b82f6; 
+}
+
+/* 2. Editor Pane */
+.sandbox-editor {
+    flex: 1; 
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--sb-border);
+    background-color: var(--sb-bg);
+}
+
+/* 3. Live Preview Pane */
+.sandbox-preview {
+    flex: 1; 
+    display: flex;
+    flex-direction: column;
+    background-color: var(--sb-preview-bg); 
+}
+
+.preview-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 40px;
+    padding: 0 1rem;
+    background-color: var(--sb-header);
+    border-bottom: 1px solid var(--sb-border);
+    color: var(--sb-text);
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.preview-iframe {
+    flex: 1;
+    width: 100%;
+    border: none;
+    background-color: var(--sb-preview-bg); 
+}
+
+/* --- Buttons --- */
+.btn-primary {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #2563eb;
+}
+
+.btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    border: none;
+    background: transparent;
+    color: var(--sb-text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-icon:hover {
+    background-color: var(--sb-hover);
+    color: var(--sb-text-title);
+}

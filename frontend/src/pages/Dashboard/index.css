@@ -1,0 +1,236 @@
+/* src/pages/Dashboard/index.css */
+
+/* ✨ THEME VARIABLES (Light Mode Default) */
+:root {
+    --dash-bg: #f3f4f6;
+    --dash-card-bg: #ffffff;
+    --dash-text-main: #111827;
+    --dash-text-sub: #6b7280;
+    --dash-border: #e5e7eb;
+    --dash-table-header: #f9fafb;
+    --dash-hover: #f9fafb;
+    
+    --accent-color: #3b82f6;
+    --accent-bg: #eff6ff;
+    
+    --success-bg: #10b981;
+    --success-hover: #059669;
+    
+    --danger-color: #ef4444;
+    --danger-border: #fca5a5;
+    --danger-hover: #fee2e2;
+}
+
+/* ✨ DARK MODE OVERRIDES */
+:root[data-theme="dark"], 
+.dark, 
+.dark-mode {
+    --dash-bg: #111827;
+    --dash-card-bg: #1f2937;
+    --dash-text-main: #f9fafb;
+    --dash-text-sub: #9ca3af;
+    --dash-border: #374151;
+    --dash-table-header: #111827;
+    --dash-hover: #374151;
+    
+    --accent-bg: rgba(59, 130, 246, 0.15);
+    --danger-border: #ef4444;
+    --danger-hover: rgba(239, 68, 68, 0.15);
+}
+
+/* ==========================================
+   LAYOUT & CONTAINERS 
+   ========================================== */
+.dashboard-wrapper {
+    background-color: var(--dash-bg);
+    min-height: 100vh;
+    padding: 2rem 1.5rem;
+    font-family: system-ui, -apple-system, sans-serif;
+    color: var(--dash-text-main);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Keep everything centered and restrict the maximum width */
+.dashboard-header,
+.dashboard-card {
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap; /* Prevents button squishing on mobile */
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.dashboard-header-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem 0;
+    color: var(--dash-text-main);
+}
+
+.dashboard-header-subtitle {
+    margin: 0;
+    color: var(--dash-text-sub);
+    font-size: 1rem;
+}
+
+.dashboard-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* ==========================================
+   CARDS 
+   ========================================== */
+.dashboard-card {
+    background-color: var(--dash-card-bg);
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--dash-border);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Account Status Section */
+.account-status {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.account-icon-bg {
+    background-color: var(--accent-bg);
+    padding: 1rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.account-title {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.account-email {
+    margin: 0;
+    color: var(--dash-text-sub);
+}
+
+.account-email strong {
+    color: var(--dash-text-main);
+}
+
+/* ==========================================
+   TABLE 
+   ========================================== */
+.session-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    margin-top: 1rem;
+}
+
+.session-table th {
+    background-color: var(--dash-table-header);
+    color: var(--dash-text-sub);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    padding: 1rem;
+    font-weight: 600;
+    border-top: 1px solid var(--dash-border);
+    border-bottom: 1px solid var(--dash-border);
+}
+
+.session-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--dash-border);
+    color: var(--dash-text-main);
+    vertical-align: middle;
+}
+
+.session-table tr:hover td {
+    background-color: var(--dash-hover);
+}
+
+.device-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+}
+
+/* ==========================================
+   BADGES & TEXT
+   ========================================== */
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-active {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #059669; 
+}
+
+.session-inactive-text {
+    color: var(--dash-text-sub);
+    font-size: 0.85rem;
+}
+
+/* ==========================================
+   BUTTONS
+   ========================================== */
+.btn-success {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--success-bg);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-success:hover {
+    background-color: var(--success-hover);
+}
+
+.btn-danger {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: transparent;
+    color: var(--danger-color);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: 1px solid var(--danger-border);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-danger:hover {
+    background-color: var(--danger-hover);
+}
+
+.btn-danger-small {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+}
