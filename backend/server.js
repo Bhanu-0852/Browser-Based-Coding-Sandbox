@@ -18,22 +18,23 @@ const app = express();
 // 🛡️ SECURITY MIDDLEWARE PIPELINE
 // ==========================================
 
-// 1. Helmet: Secures HTTP headers and hides Express fingerprint
+// 1. Helmet: Secures HTTP headers
 app.use(helmet());
 
-// 2. CORS: Only allow our Vite frontend to talk to this API, and allow cookies
-// ✨ THE FIX: Accept requests from Vite's default ports AND your .env URL
-app.use(cors({
+// 2. CORS: Use the FRONTEND_URL from your .env (which you updated to your Vercel URL!)
+const corsOptions = {
     origin: [
         'http://localhost:5173', 
         'http://localhost:5174', 
-        process.env.FRONTEND_URL
-    ],
-    credentials: true, // Crucial for HttpOnly cookies
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-}));
+        process.env.FRONTEND_URL // This now points to your Vercel app
+    ].filter(Boolean), // Removes undefined/null entries
+    credentials: true, 
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+};
 
-// 3. Parsers: Read JSON data and cookies
+app.use(cors(corsOptions));
+
+// 3. Parsers
 app.use(express.json());
 app.use(cookieParser());
 
@@ -51,16 +52,12 @@ app.get('/health', (req, res) => {
     res.status(200).json({ status: 'Secure Sandbox API is running' });
 });
 
-// 2️⃣ MOUNT YOUR AUTH ROUTES HERE
 app.use('/api/auth', authRoutes);
-
-// 3️⃣ MOUNT YOUR PROJECT ROUTES HERE
 app.use('/api/projects', projectRoutes);
 
 // ==========================================
 // 🚨 GLOBAL ERROR HANDLER
 // ==========================================
-// This catches any stray crashes and forces them to print in the terminal
 app.use((err, req, res, next) => {
     console.error("🚨 UNHANDLED SERVER CRASH:", err.stack);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -71,5 +68,5 @@ app.use((err, req, res, next) => {
 // ==========================================
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`🚀 Secure server running on http://localhost:${PORT}`);
+    console.log(`🚀 Secure server running on port ${PORT}`);
 });
