@@ -85,14 +85,8 @@ body.dark, body.dark-mode, [data-theme='dark'], .dark {
 
 .titlebar-menu span { cursor: pointer; }
 .titlebar-menu span:hover { color: var(--vsc-text-active); }
-
 .titlebar-center { font-size: 12px; }
-
-.titlebar-window-controls {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
+.titlebar-window-controls { display: flex; align-items: center; gap: 12px; }
 
 .btn-dashboard {
     display: flex;
@@ -205,18 +199,29 @@ body.dark, body.dark-mode, [data-theme='dark'], .dark {
 
 .vsc-preview-pane { border-left: 1px solid var(--vsc-border-subtle); }
 
-/* ✨ FIXED: Vertical alignment and height for tabs */
+/* ✨ THE FIX: Tabs and Button Alignment Protection */
 .vsc-tabs {
     display: flex;
     justify-content: space-between;
-    align-items: center; /* Crucial for aligning buttons in tab-actions */
+    align-items: center; 
     background-color: var(--vsc-tabs-bg);
     height: 35px;
+    overflow: hidden; /* Prevents awkward bleeding */
 }
 
+/* Let the file tabs scroll if there isn't enough room */
 .tabs-container {
     display: flex;
     height: 100%;
+    flex: 1; 
+    overflow-x: auto; 
+    overflow-y: hidden;
+}
+
+/* Hide scrollbar for a clean IDE look */
+.tabs-container::-webkit-scrollbar {
+    height: 0px;
+    background: transparent;
 }
 
 .vsc-tab {
@@ -233,6 +238,7 @@ body.dark, body.dark-mode, [data-theme='dark'], .dark {
     user-select: none;
     height: 100%;
     box-sizing: border-box;
+    flex-shrink: 0; /* Prevents the file tabs themselves from squishing */
 }
 
 .vsc-tab:hover { background-color: var(--vsc-hover-bg); }
@@ -242,23 +248,24 @@ body.dark, body.dark-mode, [data-theme='dark'], .dark {
     border-top: 1px solid var(--vsc-accent);
 }
 
-/* ✨ FIXED: Tab actions layout and height */
+/* Force the Action Buttons area to NEVER shrink */
 .tab-actions {
     display: flex;
     align-items: center;
     gap: 8px;
     padding: 0 16px;
     height: 100%;
+    flex-shrink: 0; /* ✨ MAGIC: This guarantees the Save button stays full size! */
 }
 
-/* ✨ FIXED: Sleek, compact action buttons */
+/* Protect the buttons inside from wrapping or shrinking */
 .vsc-action-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
-    height: 24px; /* Professional IDE height */
-    padding: 0 10px;
+    gap: 6px;
+    height: 24px;
+    padding: 0 12px;
     border-radius: 3px;
     font-size: 11px;
     font-weight: 600;
@@ -266,6 +273,8 @@ body.dark, body.dark-mode, [data-theme='dark'], .dark {
     border: none;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    flex-shrink: 0; /* Protects the button */
+    white-space: nowrap; /* Forces text to stay on one line */
 }
 
 .run-btn { background-color: var(--vsc-run-btn); }
@@ -279,9 +288,7 @@ body.dark, body.dark-mode, [data-theme='dark'], .dark {
     opacity: 0.8;
 }
 
-.animate-spin {
-    animation: spin 1s linear infinite;
-}
+.animate-spin { animation: spin 1s linear infinite; }
 
 @keyframes spin {
     from { transform: rotate(0deg); }
@@ -294,6 +301,8 @@ body.dark, body.dark-mode, [data-theme='dark'], .dark {
     border-radius: 4px;
     font-size: 11px;
     color: var(--vsc-text);
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 .monaco-wrapper {
@@ -335,10 +344,7 @@ body.dark, body.dark-mode, [data-theme='dark'], .dark {
     color: #ffffff;
 }
 
-.status-left, .status-right {
-    display: flex;
-    gap: 16px;
-}
+.status-left, .status-right { display: flex; gap: 16px; }
 
 .status-item {
     display: flex;
