@@ -6,7 +6,7 @@ dotenv.config();
 
 export const sendEmail = async (email, otp) => {
     try {
-        // ✨ Force SMTP configuration instead of 'service: gmail'
+        // ✨ Force SMTP configuration with short timeouts to prevent Render hanging
         const transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
             port: 465,
@@ -15,6 +15,10 @@ export const sendEmail = async (email, otp) => {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS, // Your 16-digit App Password
             },
+            // ✨ THE FIX: Force it to timeout after 3 seconds instead of 2 minutes
+            connectionTimeout: 3000,
+            greetingTimeout: 3000,
+            socketTimeout: 3000,
         });
 
         const mailOptions = {
