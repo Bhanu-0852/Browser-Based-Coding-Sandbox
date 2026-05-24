@@ -1,43 +1,57 @@
+// backend/controllers/projectController.js
 import Project from '../models/Project.js';
 
-// ✨ SAVE PROJECT
+// ==========================================
+// 💾 SAVE PROJECT
+// ==========================================
 export const saveProject = async (req, res) => {
     try {
-        const { files } = req.body;
-        const userId = req.user._id;
+        const { html, css, js } = req.body;
+        
+        // Check how your auth middleware attaches the user ID
+        const userId = req.userId || (req.user && req.user._id);
 
-        // Look for an existing project for this user
+        if (!userId) {
+            return res.status(401).json({ error: "User ID not found in request" });
+        }
+
         let project = await Project.findOne({ userId });
         
         if (project) {
-            // Update the existing code
-            project.files = files;
+            // Update existing project
+            project.html = html; 
+            project.css = css; 
+            project.js = js;
             await project.save();
         } else {
-            // First time saving? Create a brand new workspace
-            project = await Project.create({ userId, files });
+            // Create new project for first-time save
+            await Project.create({ userId, html, css, js });
         }
-
-        res.status(200).json({ message: 'Project saved successfully' });
+        
+        res.status(200).json({ message: 'Project saved successfully!' });
     } catch (error) {
-        console.error("🔥 SAVE ERROR:", error);
+        console.error("Save Error:", error);
         res.status(500).json({ error: 'Failed to save project' });
     }
 };
 
-// ✨ LOAD PROJECT
+// ==========================================
+// 📂 LOAD PROJECT
+// ==========================================
 export const loadProject = async (req, res) => {
     try {
-        const userId = req.user._id;
+        const userId = req.userId || (req.user && req.user._id);
+
         const project = await Project.findOne({ userId });
         
-        if (!project) {
-            return res.status(200).json({ files: [] }); // No project yet, load default UI
+        if (project) {
+            res.status(200).json(project);
+        } else {
+            // 404 is expected for brand new users, frontend will handle this gracefully
+            res.status(404).json({ message: 'No project found' });
         }
-
-        res.status(200).json({ files: project.files });
     } catch (error) {
-        console.error("🔥 LOAD ERROR:", error);
-        res.status(500).json({ error: 'Failed to load project' });
+        console.error("Load Error:", error);
+        res.status(500).json({ error: 'Failed to fetch project' });
     }
 };
