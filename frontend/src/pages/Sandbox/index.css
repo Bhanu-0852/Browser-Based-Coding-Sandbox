@@ -1,291 +1,374 @@
 /* src/pages/Sandbox/index.css */
 
-/* --- Default / Light Theme Variables --- */
+/* ✨ DEFAULT LIGHT MODE VARIABLES */
 :root {
-    --ide-bg-main: #ffffff;
-    --ide-bg-sidebar: #f8fafc;
-    --ide-bg-topbar: #f1f5f9;
-    --ide-bg-tabs: #e2e8f0;
-    --ide-bg-tab-active: #ffffff;
-    --ide-bg-hover: #e2e8f0;
+    --vsc-titlebar: #dddddd;
+    --vsc-activitybar: #ececec;
+    --vsc-sidebar: #f3f3f3;
+    --vsc-editor: #ffffff;
+    --vsc-tabs-bg: #ececec;
+    --vsc-tab-active: #ffffff;
     
-    --ide-border: #cbd5e1;
+    --vsc-border: #cccccc;
+    --vsc-border-subtle: #e4e4e4;
     
-    --ide-text-main: #0f172a;
-    --ide-text-muted: #64748b;
-    --ide-text-active: #0f172a;
+    --vsc-text: #333333;
+    --vsc-text-muted: #737373;
+    --vsc-text-active: #000000;
     
-    --ide-accent: #4f46e5;
-    --ide-accent-hover: #4338ca;
+    --vsc-accent: #007acc;
+    --vsc-accent-hover: #005f9e;
     
-    --ide-search-bg: #ffffff;
-    --ide-search-border: #cbd5e1;
+    --vsc-run-btn: #10b981;
+    --vsc-run-btn-hover: #059669;
+    
+    --vsc-statusbar: #007acc;
+    
+    --vsc-hover-bg: rgba(0, 0, 0, 0.05);
+    --vsc-active-bg: rgba(0, 0, 0, 0.1);
 }
 
-/* --- Dark Theme Variables (VS Code Authentic) --- */
+/* ✨ VS CODE DARK MODE VARIABLES */
 body.dark, 
 body.dark-mode, 
 [data-theme='dark'], 
 .dark {
-    --ide-bg-main: #1e1e1e;
-    --ide-bg-sidebar: #252526;
-    --ide-bg-topbar: #333333;
-    --ide-bg-tabs: #252526;
-    --ide-bg-tab-active: #1e1e1e;
-    --ide-bg-hover: #2a2d2e;
+    --vsc-titlebar: #323233;
+    --vsc-activitybar: #333333;
+    --vsc-sidebar: #252526;
+    --vsc-editor: #1e1e1e;
+    --vsc-tabs-bg: #252526;
+    --vsc-tab-active: #1e1e1e;
     
-    --ide-border: #333333; /* Darker borders for seamless look */
+    --vsc-border: #333333;
+    --vsc-border-subtle: #1e1e1e;
     
-    --ide-text-main: #cccccc;
-    --ide-text-muted: #969696;
-    --ide-text-active: #ffffff;
+    --vsc-text: #cccccc;
+    --vsc-text-muted: #858585;
+    --vsc-text-active: #ffffff;
     
-    --ide-accent: #007acc;
-    --ide-accent-hover: #005f9e;
+    --vsc-accent: #007acc;
+    --vsc-accent-hover: #005f9e;
     
-    --ide-search-bg: #404040;
-    --ide-search-border: #555555;
+    --vsc-run-btn: #10b981;
+    --vsc-run-btn-hover: #059669;
+    
+    --vsc-statusbar: #007acc;
+    
+    --vsc-hover-bg: #2a2d2e;
+    --vsc-active-bg: #37373d;
 }
 
-/* --- Base Layout --- */
-.premium-ide-wrapper {
-    height: 100vh;
+/* Base Layout */
+.vsc-root {
     display: flex;
     flex-direction: column;
-    background-color: var(--ide-bg-main);
-    color: var(--ide-text-main);
-    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    height: 100vh;
+    background-color: var(--vsc-editor);
+    color: var(--vsc-text);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     overflow: hidden;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* --- Top Navigation Bar --- */
-.ide-topbar {
-    height: 48px;
-    background-color: var(--ide-bg-topbar);
+/* 1. Title Bar */
+.vsc-titlebar {
+    height: 35px;
+    background-color: var(--vsc-titlebar);
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 16px;
-    border-bottom: 1px solid var(--ide-border);
-    transition: background-color 0.3s ease;
+    font-size: 13px;
+    color: var(--vsc-text);
+    user-select: none;
 }
 
-.topbar-left, .topbar-right {
+.titlebar-menu {
+    display: flex;
+    gap: 16px;
+}
+
+.titlebar-menu span {
+    cursor: pointer;
+}
+
+.titlebar-menu span:hover {
+    color: var(--vsc-text-active);
+}
+
+.titlebar-center {
+    font-size: 12px;
+}
+
+.titlebar-window-controls {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.brand-icon {
-    color: var(--ide-accent);
-}
-
-.brand-text {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--ide-text-main);
-}
-
-.topbar-center .search-bar {
-    background-color: var(--ide-search-bg);
-    padding: 4px 120px;
-    border-radius: 6px;
-    font-size: 12px;
-    color: var(--ide-text-main);
-    border: 1px solid var(--ide-search-border);
-    text-align: center;
-}
-
-.user-email {
-    font-size: 12px;
-    color: var(--ide-text-muted);
-}
-
-.btn-ide {
+.btn-dashboard {
     display: flex;
     align-items: center;
     gap: 6px;
     background-color: transparent;
-    border: 1px solid transparent;
-    color: var(--ide-text-main);
-    padding: 6px 12px;
-    border-radius: 6px;
+    color: var(--vsc-text);
+    border: 1px solid var(--vsc-border);
+    padding: 4px 10px;
+    border-radius: 4px;
     font-size: 12px;
-    font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
 }
 
-.btn-ide:hover {
-    background-color: var(--ide-bg-hover);
+.btn-dashboard:hover {
+    background-color: var(--vsc-hover-bg);
 }
 
-.btn-save {
-    background-color: var(--ide-accent);
-    color: white;
-    border: none;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.btn-save:hover {
-    background-color: var(--ide-accent-hover);
-    color: white;
-}
-
-/* --- Main Workspace --- */
-.ide-main {
+/* 2. Main Body Layout */
+.vsc-body {
     display: flex;
     flex: 1;
-    height: calc(100vh - 48px);
+    height: calc(100vh - 57px);
 }
 
-/* --- Sidebar (Explorer) --- */
-.ide-sidebar {
+/* 3. Activity Bar */
+.vsc-activitybar {
+    width: 48px;
+    background-color: var(--vsc-activitybar);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px 0;
+}
+
+.activity-top, .activity-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.activity-icon {
+    color: var(--vsc-text-muted);
+    cursor: pointer;
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.activity-icon:hover {
+    color: var(--vsc-text);
+}
+
+.activity-icon.active {
+    color: var(--vsc-text-active);
+}
+
+.activity-icon.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: -5px;
+    bottom: -5px;
+    width: 2px;
+    background-color: var(--vsc-text-active);
+}
+
+/* 4. Sidebar */
+.vsc-sidebar {
     width: 250px;
-    background-color: var(--ide-bg-sidebar);
-    border-right: 1px solid var(--ide-border);
+    background-color: var(--vsc-sidebar);
+    border-right: 1px solid var(--vsc-border-subtle);
     display: flex;
     flex-direction: column;
-    transition: background-color 0.3s ease;
 }
 
-.sidebar-header {
+.sidebar-title {
     font-size: 11px;
-    font-weight: 700;
     padding: 12px 20px;
-    letter-spacing: 1px;
-    color: var(--ide-text-muted);
+    color: var(--vsc-text);
 }
 
-.file-tree {
+.section-header {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--vsc-text);
+    cursor: pointer;
 }
 
-.file-item {
+.file-row {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 20px;
+    padding: 4px 20px 4px 28px;
     font-size: 13px;
     cursor: pointer;
+}
+
+.file-row:hover {
+    background-color: var(--vsc-hover-bg);
+}
+
+.file-row.active {
+    background-color: var(--vsc-active-bg);
+    color: var(--vsc-text-active);
+}
+
+/* 5. Editor & Preview Panes */
+.vsc-editor-pane, .vsc-preview-pane {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.vsc-preview-pane {
+    border-left: 1px solid var(--vsc-border-subtle);
+}
+
+.vsc-tabs {
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--vsc-tabs-bg);
+    height: 35px;
+}
+
+.tabs-container {
+    display: flex;
+}
+
+.vsc-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 16px;
+    background-color: transparent;
+    color: var(--vsc-text-muted);
+    font-size: 13px;
+    cursor: pointer;
+    border-right: 1px solid var(--vsc-border-subtle);
     user-select: none;
-    color: var(--ide-text-main);
+}
+
+.vsc-tab:hover {
+    background-color: var(--vsc-hover-bg);
+}
+
+.vsc-tab.active {
+    background-color: var(--vsc-tab-active);
+    color: var(--vsc-text-active);
+    border-top: 1px solid var(--vsc-accent);
+}
+
+.tab-actions {
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+}
+
+/* The Run & Save Buttons */
+.vsc-run-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background-color: var(--vsc-run-btn);
+    color: white;
+    border: none;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
     transition: background-color 0.2s ease;
 }
 
-.file-item:hover {
-    background-color: var(--ide-bg-hover);
+.vsc-run-button:hover:not(:disabled) {
+    background-color: var(--vsc-run-btn-hover);
 }
 
-.file-item.active {
-    background-color: var(--ide-bg-tab-active);
-    color: var(--ide-text-active);
-    border-left: 2px solid var(--ide-accent);
+.vsc-run-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.9;
 }
 
-/* --- Editor Area --- */
-.ide-editor-section {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 0; 
+/* ✨ The Spinning Animation for the Save Button */
+.animate-spin {
+    animation: spin 1s linear infinite;
 }
 
-.editor-tabs {
-    display: flex;
-    background-color: var(--ide-bg-tabs);
-    height: 40px;
-    transition: background-color 0.3s ease;
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
-.tab {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 0 20px;
-    background-color: var(--ide-bg-tabs);
-    color: var(--ide-text-muted);
-    font-size: 13px;
-    cursor: pointer;
-    border-right: 1px solid var(--ide-border);
-    border-top: 2px solid transparent;
-    transition: all 0.2s ease;
-}
-
-.tab:hover {
-    background-color: var(--ide-bg-hover);
-}
-
-.tab.active {
-    background-color: var(--ide-bg-tab-active);
-    color: var(--ide-text-active);
-    border-top: 2px solid var(--ide-accent);
-}
-
-.editor-container {
-    flex: 1;
-    background-color: var(--ide-bg-main);
-}
-
-/* --- Preview Area --- */
-.ide-preview-section {
-    width: 40%;
-    background-color: var(--ide-bg-main);
-    border-left: 1px solid var(--ide-border);
-    display: flex;
-    flex-direction: column;
-}
-
-.preview-header {
-    height: 40px;
-    background-color: var(--ide-bg-sidebar);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 16px;
-    border-bottom: 1px solid var(--ide-border);
-}
-
-.browser-dots {
-    display: flex;
-    gap: 6px;
-}
-
-.dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-}
-.dot.red { background-color: #ff5f56; }
-.dot.yellow { background-color: #ffbd2e; }
-.dot.green { background-color: #27c93f; }
-
-.browser-url {
-    background-color: var(--ide-search-bg);
-    padding: 4px 30px;
+.url-bar {
+    background-color: var(--vsc-hover-bg);
+    padding: 2px 16px;
     border-radius: 4px;
-    font-size: 11px;
-    color: var(--ide-text-muted);
-    border: 1px solid var(--ide-border);
+    font-size: 12px;
+    color: var(--vsc-text);
 }
 
-.preview-title {
+.monaco-wrapper {
+    flex: 1;
+    background-color: var(--vsc-editor);
+}
+
+.preview-wrapper {
+    flex: 1;
+    background-color: #ffffff; /* Must remain white to render HTML cleanly */
+    display: flex;
+    flex-direction: column;
+}
+
+.empty-preview {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--vsc-text);
+    background-color: var(--vsc-editor);
+}
+
+.empty-icon {
+    color: var(--vsc-text-muted);
+    margin-bottom: 16px;
+}
+
+/* 6. Status Bar (Bottom) */
+.vsc-statusbar {
+    height: 22px;
+    background-color: var(--vsc-statusbar); 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    font-size: 12px;
+    color: #ffffff;
+}
+
+.status-left, .status-right {
+    display: flex;
+    gap: 16px;
+}
+
+.status-item {
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--ide-text-muted);
-    letter-spacing: 0.5px;
+    gap: 4px;
+    cursor: pointer;
 }
 
-.play-icon {
-    color: #10b981;
-}
-
-.iframe-container {
-    flex: 1;
-    background-color: #ffffff; /* Must remain white so HTML previews look normal */
+.status-item:hover {
+    background-color: rgba(255, 255, 255, 0.2);
 }
