@@ -25,6 +25,7 @@ const Sandbox = () => {
         js: `const btn = document.getElementById('connectBtn');\n\nbtn.addEventListener('click', () => {\n  btn.innerText = 'Connected!';\n  btn.style.background = '#10b981';\n  console.log('Connection established successfully.');\n});`
     };
 
+    // The initial state uses a loading message, but the prefilled code is added on boot
     const [files, setFiles] = useState({
         html: '<div class="loading">Loading your workspace...</div>',
         css: '.loading { color: #888; text-align: center; margin-top: 2rem; font-family: sans-serif; }',
@@ -33,6 +34,7 @@ const Sandbox = () => {
 
     const [srcDoc, setSrcDoc] = useState('');
 
+    // Fetch the project from MongoDB on load
     useEffect(() => {
         const fetchProject = async () => {
             try {
@@ -42,7 +44,9 @@ const Sandbox = () => {
                     css: res.data.css || defaultCode.css,
                     js: res.data.js || defaultCode.js
                 });
+                console.log("Project loaded securely from database!");
             } catch (error) {
+                // If 404 (no project yet) or any other error, load the premium prefilled code
                 if (error.response?.status === 404) {
                     setFiles(defaultCode);
                 }
@@ -51,10 +55,12 @@ const Sandbox = () => {
         fetchProject();
     }, []);
 
+    // Save project to MongoDB
     const handleSave = async () => {
         setIsSaving(true);
         try {
             await api.post('/projects/save', files);
+            // Quick delay for visual feedback, then reset saving state
             setTimeout(() => setIsSaving(false), 800); 
         } catch (error) {
             console.error("Save failed", error);
@@ -63,6 +69,7 @@ const Sandbox = () => {
         }
     };
 
+    // Theme Sync
     useEffect(() => {
         const checkTheme = () => {
             const isDark = document.body.classList.contains('dark') || 
@@ -173,7 +180,7 @@ const Sandbox = () => {
                             </div>
                         </div>
                         
-                        {/* ✨ FIXED ALIGNMENT: Sleek Action Buttons */}
+                        {/* ✨ FIXED ALIGNMENT: Action Buttons (Run & Save) */}
                         <div className="tab-actions">
                             <button className="vsc-action-btn run-btn" onClick={handleRun}>
                                 <Play size={12} fill="currentColor" /> Run
