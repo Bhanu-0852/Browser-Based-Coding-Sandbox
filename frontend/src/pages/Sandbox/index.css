@@ -1,6 +1,5 @@
 /* src/pages/Sandbox/index.css */
 
-/* ✨ DEFAULT LIGHT MODE VARIABLES */
 :root {
     --vsc-titlebar: #dddddd;
     --vsc-activitybar: #ececec;
@@ -17,22 +16,18 @@
     --vsc-text-active: #000000;
     
     --vsc-accent: #007acc;
-    --vsc-accent-hover: #005f9e;
     
     --vsc-run-btn: #10b981;
     --vsc-run-btn-hover: #059669;
+    --vsc-save-btn: #3b82f6;
+    --vsc-save-btn-hover: #2563eb;
     
     --vsc-statusbar: #007acc;
-    
     --vsc-hover-bg: rgba(0, 0, 0, 0.05);
     --vsc-active-bg: rgba(0, 0, 0, 0.1);
 }
 
-/* ✨ VS CODE DARK MODE VARIABLES */
-body.dark, 
-body.dark-mode, 
-[data-theme='dark'], 
-.dark {
+body.dark, body.dark-mode, [data-theme='dark'], .dark {
     --vsc-titlebar: #323233;
     --vsc-activitybar: #333333;
     --vsc-sidebar: #252526;
@@ -48,18 +43,17 @@ body.dark-mode,
     --vsc-text-active: #ffffff;
     
     --vsc-accent: #007acc;
-    --vsc-accent-hover: #005f9e;
     
     --vsc-run-btn: #10b981;
     --vsc-run-btn-hover: #059669;
+    --vsc-save-btn: #007acc;
+    --vsc-save-btn-hover: #005f9e;
     
     --vsc-statusbar: #007acc;
-    
     --vsc-hover-bg: #2a2d2e;
     --vsc-active-bg: #37373d;
 }
 
-/* Base Layout */
 .vsc-root {
     display: flex;
     flex-direction: column;
@@ -71,7 +65,7 @@ body.dark-mode,
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* 1. Title Bar */
+/* Title Bar */
 .vsc-titlebar {
     height: 35px;
     background-color: var(--vsc-titlebar);
@@ -89,17 +83,10 @@ body.dark-mode,
     gap: 16px;
 }
 
-.titlebar-menu span {
-    cursor: pointer;
-}
+.titlebar-menu span { cursor: pointer; }
+.titlebar-menu span:hover { color: var(--vsc-text-active); }
 
-.titlebar-menu span:hover {
-    color: var(--vsc-text-active);
-}
-
-.titlebar-center {
-    font-size: 12px;
-}
+.titlebar-center { font-size: 12px; }
 
 .titlebar-window-controls {
     display: flex;
@@ -120,18 +107,16 @@ body.dark-mode,
     cursor: pointer;
 }
 
-.btn-dashboard:hover {
-    background-color: var(--vsc-hover-bg);
-}
+.btn-dashboard:hover { background-color: var(--vsc-hover-bg); }
 
-/* 2. Main Body Layout */
+/* Main Body Layout */
 .vsc-body {
     display: flex;
     flex: 1;
     height: calc(100vh - 57px);
 }
 
-/* 3. Activity Bar */
+/* Activity Bar */
 .vsc-activitybar {
     width: 48px;
     background-color: var(--vsc-activitybar);
@@ -157,14 +142,8 @@ body.dark-mode,
     justify-content: center;
 }
 
-.activity-icon:hover {
-    color: var(--vsc-text);
-}
-
-.activity-icon.active {
-    color: var(--vsc-text-active);
-}
-
+.activity-icon:hover { color: var(--vsc-text); }
+.activity-icon.active { color: var(--vsc-text-active); }
 .activity-icon.active::before {
     content: '';
     position: absolute;
@@ -175,7 +154,7 @@ body.dark-mode,
     background-color: var(--vsc-text-active);
 }
 
-/* 4. Sidebar */
+/* Sidebar */
 .vsc-sidebar {
     width: 250px;
     background-color: var(--vsc-sidebar);
@@ -210,16 +189,13 @@ body.dark-mode,
     cursor: pointer;
 }
 
-.file-row:hover {
-    background-color: var(--vsc-hover-bg);
-}
-
+.file-row:hover { background-color: var(--vsc-hover-bg); }
 .file-row.active {
     background-color: var(--vsc-active-bg);
     color: var(--vsc-text-active);
 }
 
-/* 5. Editor & Preview Panes */
+/* Editor & Preview Panes */
 .vsc-editor-pane, .vsc-preview-pane {
     flex: 1;
     display: flex;
@@ -227,19 +203,20 @@ body.dark-mode,
     min-width: 0;
 }
 
-.vsc-preview-pane {
-    border-left: 1px solid var(--vsc-border-subtle);
-}
+.vsc-preview-pane { border-left: 1px solid var(--vsc-border-subtle); }
 
+/* ✨ FIXED: Tabs Container Alignment */
 .vsc-tabs {
     display: flex;
     justify-content: space-between;
+    align-items: center; /* Locks vertical alignment */
     background-color: var(--vsc-tabs-bg);
     height: 35px;
 }
 
 .tabs-container {
     display: flex;
+    height: 100%;
 }
 
 .vsc-tab {
@@ -252,69 +229,69 @@ body.dark-mode,
     font-size: 13px;
     cursor: pointer;
     border-right: 1px solid var(--vsc-border-subtle);
+    border-top: 1px solid transparent;
     user-select: none;
+    height: 100%;
+    box-sizing: border-box;
 }
 
-.vsc-tab:hover {
-    background-color: var(--vsc-hover-bg);
-}
-
+.vsc-tab:hover { background-color: var(--vsc-hover-bg); }
 .vsc-tab.active {
     background-color: var(--vsc-tab-active);
     color: var(--vsc-text-active);
     border-top: 1px solid var(--vsc-accent);
 }
 
+/* ✨ FIXED: Sleek Button Layout */
 .tab-actions {
     display: flex;
     align-items: center;
+    gap: 8px;
     padding: 0 16px;
+    height: 100%;
 }
 
-/* The Run & Save Buttons */
-.vsc-run-button {
-    display: flex;
+.vsc-action-btn {
+    display: inline-flex;
     align-items: center;
-    gap: 6px;
-    background-color: var(--vsc-run-btn);
+    justify-content: center;
+    gap: 4px;
+    height: 24px; /* Sleeker VS Code standard */
+    padding: 0 10px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 600;
     color: white;
     border: none;
-    padding: 4px 12px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: bold;
     cursor: pointer;
     transition: background-color 0.2s ease;
 }
 
-.vsc-run-button:hover:not(:disabled) {
-    background-color: var(--vsc-run-btn-hover);
-}
+.run-btn { background-color: var(--vsc-run-btn); }
+.run-btn:hover { background-color: var(--vsc-run-btn-hover); }
 
-.vsc-run-button:disabled {
+.save-btn { background-color: var(--vsc-save-btn); }
+.save-btn:hover:not(:disabled) { background-color: var(--vsc-save-btn-hover); }
+
+.save-btn:disabled {
     cursor: not-allowed;
-    opacity: 0.9;
+    opacity: 0.8;
 }
 
-/* ✨ The Spinning Animation for the Save Button */
 .animate-spin {
     animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 .url-bar {
     background-color: var(--vsc-hover-bg);
-    padding: 2px 16px;
+    padding: 3px 12px;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 11px;
     color: var(--vsc-text);
 }
 
@@ -325,7 +302,7 @@ body.dark-mode,
 
 .preview-wrapper {
     flex: 1;
-    background-color: #ffffff; /* Must remain white to render HTML cleanly */
+    background-color: #ffffff; 
     display: flex;
     flex-direction: column;
 }
@@ -345,7 +322,7 @@ body.dark-mode,
     margin-bottom: 16px;
 }
 
-/* 6. Status Bar (Bottom) */
+/* Status Bar */
 .vsc-statusbar {
     height: 22px;
     background-color: var(--vsc-statusbar); 
@@ -353,7 +330,7 @@ body.dark-mode,
     justify-content: space-between;
     align-items: center;
     padding: 0 16px;
-    font-size: 12px;
+    font-size: 11px;
     color: #ffffff;
 }
 
@@ -369,6 +346,4 @@ body.dark-mode,
     cursor: pointer;
 }
 
-.status-item:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-}
+.status-item:hover { background-color: rgba(255, 255, 255, 0.2); }
