@@ -205,11 +205,11 @@ body.dark, body.dark-mode, [data-theme='dark'], .dark {
 
 .vsc-preview-pane { border-left: 1px solid var(--vsc-border-subtle); }
 
-/* ✨ FIXED: Tabs Container Alignment */
+/* ✨ FIXED: Vertical alignment and height for tabs */
 .vsc-tabs {
     display: flex;
     justify-content: space-between;
-    align-items: center; /* Locks vertical alignment */
+    align-items: center; /* Crucial for aligning buttons in tab-actions */
     background-color: var(--vsc-tabs-bg);
     height: 35px;
 }
@@ -242,7 +242,7 @@ body.dark, body.dark-mode, [data-theme='dark'], .dark {
     border-top: 1px solid var(--vsc-accent);
 }
 
-/* ✨ FIXED: Sleek Button Layout */
+/* ✨ FIXED: Tab actions layout and height */
 .tab-actions {
     display: flex;
     align-items: center;
@@ -251,12 +251,13 @@ body.dark, body.dark-mode, [data-theme='dark'], .dark {
     height: 100%;
 }
 
+/* ✨ FIXED: Sleek, compact action buttons */
 .vsc-action-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 4px;
-    height: 24px; /* Sleeker VS Code standard */
+    height: 24px; /* Professional IDE height */
     padding: 0 10px;
     border-radius: 3px;
     font-size: 11px;
