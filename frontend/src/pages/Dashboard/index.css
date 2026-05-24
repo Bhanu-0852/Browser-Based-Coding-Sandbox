@@ -20,8 +20,11 @@
     --success-dot: #22c55e;
 }
 
-/* Dark mode overrides (if your ThemeToggle uses a dark class on the body) */
-body.dark-mode {
+/* ✨ THE FIX: Catch all common React dark mode triggers */
+body.dark, 
+body.dark-mode, 
+[data-theme='dark'], 
+.dark {
     --bg-page: #0f172a;
     --bg-card: #1e293b;
     --text-main: #f8fafc;
@@ -37,6 +40,7 @@ body.dark-mode {
 }
 
 /* --- Layout --- */
+/* (Keep all the rest of your CSS exactly the same below this point!) */
 .premium-dashboard-wrapper {
     min-height: 100vh;
     background-color: var(--bg-page);
