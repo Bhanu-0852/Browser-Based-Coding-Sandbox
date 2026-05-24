@@ -5,14 +5,16 @@ import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import { sendEmail } from '../utils/sendEmail.js';
 
-// ✨ UPDATE: Pass the sessionId into the JWT payload
+// ✨ UPDATE: Allow cross-domain cookies between Vercel and Render
 const issueCookie = (res, userId, sessionId) => {
     const token = jwt.sign({ id: userId, sessionId }, process.env.JWT_SECRET, { expiresIn: '7d' });
     res.cookie('jwt', token, {
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         httpOnly: true,
-        sameSite: 'strict',
-        secure: process.env.NODE_ENV !== 'development',
+        // ✨ THE FIX: Change this from 'strict' to 'none' for cross-domain
+        sameSite: 'none', 
+        // ✨ MUST be true for 'sameSite: none' to work in modern browsers
+        secure: true, 
     });
 };
 
@@ -38,14 +40,13 @@ export const sendOTP = async (req, res) => {
 
         // ✨ THE FIX: Handle Render's SMTP Block Gracefully
         try {
-            // Attempt to send the real email via Nodemailer
+            // Attempt to send the real email (Now using Brevo under the hood!)
             await sendEmail(email, otp); 
             res.status(200).json({ message: 'OTP sent successfully' });
         } catch (mailError) {
             console.error("🚨 Render SMTP Blocked. Demo OTP is:", otp);
             
             // Return 200 OK so the frontend UI moves forward instead of crashing.
-            // Sending demoOtp in the payload allows recruiters to easily test the app.
             res.status(200).json({ 
                 message: 'OTP generated (SMTP blocked by host). Check console or use demo code.',
                 demoOtp: otp 
