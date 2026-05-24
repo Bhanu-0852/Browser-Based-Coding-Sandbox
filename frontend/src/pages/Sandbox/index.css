@@ -1,200 +1,291 @@
 /* src/pages/Sandbox/index.css */
 
-/* ✨ NEW: CSS Variables mapping the theme colors */
+/* --- Default / Light Theme Variables --- */
 :root {
-    --sb-bg: #1e1e1e;
-    --sb-header: #252526;
-    --sb-border: #333333;
-    --sb-text: #cccccc;
-    --sb-text-title: #ffffff;
-    --sb-text-muted: #969696;
-    --sb-hover: rgba(255, 255, 255, 0.05);
-    --sb-preview-bg: #ffffff;
+    --ide-bg-main: #ffffff;
+    --ide-bg-sidebar: #f8fafc;
+    --ide-bg-topbar: #f1f5f9;
+    --ide-bg-tabs: #e2e8f0;
+    --ide-bg-tab-active: #ffffff;
+    --ide-bg-hover: #e2e8f0;
+    
+    --ide-border: #cbd5e1;
+    
+    --ide-text-main: #0f172a;
+    --ide-text-muted: #64748b;
+    --ide-text-active: #0f172a;
+    
+    --ide-accent: #4f46e5;
+    --ide-accent-hover: #4338ca;
+    
+    --ide-search-bg: #ffffff;
+    --ide-search-border: #cbd5e1;
 }
 
-/* ✨ NEW: Light Mode Overrides (Matches standard ThemeToggle behavior) */
-:root[data-theme="light"],
-.light,
-.light-mode {
-    --sb-bg: #f3f4f6;
-    --sb-header: #ffffff;
-    --sb-border: #e5e7eb;
-    --sb-text: #374151;
-    --sb-text-title: #111827;
-    --sb-text-muted: #6b7280;
-    --sb-hover: rgba(0, 0, 0, 0.05);
+/* --- Dark Theme Variables (VS Code Authentic) --- */
+body.dark, 
+body.dark-mode, 
+[data-theme='dark'], 
+.dark {
+    --ide-bg-main: #1e1e1e;
+    --ide-bg-sidebar: #252526;
+    --ide-bg-topbar: #333333;
+    --ide-bg-tabs: #252526;
+    --ide-bg-tab-active: #1e1e1e;
+    --ide-bg-hover: #2a2d2e;
+    
+    --ide-border: #333333; /* Darker borders for seamless look */
+    
+    --ide-text-main: #cccccc;
+    --ide-text-muted: #969696;
+    --ide-text-active: #ffffff;
+    
+    --ide-accent: #007acc;
+    --ide-accent-hover: #005f9e;
+    
+    --ide-search-bg: #404040;
+    --ide-search-border: #555555;
 }
 
-/* --- Layout Foundations --- */
-.sandbox-layout {
+/* --- Base Layout --- */
+.premium-ide-wrapper {
+    height: 100vh;
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    background-color: var(--sb-bg);
-    color: var(--sb-text);
+    background-color: var(--ide-bg-main);
+    color: var(--ide-text-main);
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
     overflow: hidden;
-    font-family: system-ui, -apple-system, sans-serif;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* --- Top Header --- */
-.sandbox-header {
+/* --- Top Navigation Bar --- */
+.ide-topbar {
+    height: 48px;
+    background-color: var(--ide-bg-topbar);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 60px;
-    padding: 0 1.5rem;
-    background-color: var(--sb-header);
-    border-bottom: 1px solid var(--sb-border);
-    transition: background-color 0.3s ease, border-color 0.3s ease;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--ide-border);
+    transition: background-color 0.3s ease;
 }
 
-.sandbox-header-left,
-.sandbox-header-right {
+.topbar-left, .topbar-right {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 12px;
 }
 
-.sandbox-title {
-    margin: 0;
-    font-size: 1.15rem;
+.brand-icon {
+    color: var(--ide-accent);
+}
+
+.brand-text {
+    font-size: 13px;
     font-weight: 600;
-    color: var(--sb-text-title);
-    letter-spacing: 0.5px;
+    color: var(--ide-text-main);
 }
 
-.user-email-display {
-    font-size: 0.85rem;
-    color: var(--sb-text-muted);
-    padding-right: 1rem;
-    border-right: 1px solid var(--sb-border);
+.topbar-center .search-bar {
+    background-color: var(--ide-search-bg);
+    padding: 4px 120px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--ide-text-main);
+    border: 1px solid var(--ide-search-border);
+    text-align: center;
 }
 
-/* --- Main Workspace (3 Columns) --- */
-.sandbox-workspace {
-    display: flex;
-    flex: 1;
-    height: calc(100vh - 60px);
+.user-email {
+    font-size: 12px;
+    color: var(--ide-text-muted);
 }
 
-/* 1. Sidebar */
-.sandbox-sidebar {
-    width: 220px;
-    background-color: var(--sb-header);
-    border-right: 1px solid var(--sb-border);
-    display: flex;
-    flex-direction: column;
-    padding: 1rem 0;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-.sidebar-title {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--sb-text-muted);
-    padding: 0 1.5rem 0.75rem;
-    margin: 0;
-}
-
-.file-tab {
+.btn-ide {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.6rem 1.5rem;
-    background: transparent;
-    border: none;
-    border-left: 3px solid transparent; 
-    color: var(--sb-text);
+    gap: 6px;
+    background-color: transparent;
+    border: 1px solid transparent;
+    color: var(--ide-text-main);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
     cursor: pointer;
-    text-align: left;
-    font-size: 0.9rem;
     transition: all 0.2s ease;
 }
 
-.file-tab:hover {
-    background-color: var(--sb-hover);
-    color: var(--sb-text-title);
+.btn-ide:hover {
+    background-color: var(--ide-bg-hover);
 }
 
-.file-tab.active {
-    background-color: rgba(59, 130, 246, 0.1); 
-    color: #3b82f6; 
-    border-left: 3px solid #3b82f6; 
+.btn-save {
+    background-color: var(--ide-accent);
+    color: white;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* 2. Editor Pane */
-.sandbox-editor {
-    flex: 1; 
+.btn-save:hover {
+    background-color: var(--ide-accent-hover);
+    color: white;
+}
+
+/* --- Main Workspace --- */
+.ide-main {
+    display: flex;
+    flex: 1;
+    height: calc(100vh - 48px);
+}
+
+/* --- Sidebar (Explorer) --- */
+.ide-sidebar {
+    width: 250px;
+    background-color: var(--ide-bg-sidebar);
+    border-right: 1px solid var(--ide-border);
     display: flex;
     flex-direction: column;
-    border-right: 1px solid var(--sb-border);
-    background-color: var(--sb-bg);
+    transition: background-color 0.3s ease;
 }
 
-/* 3. Live Preview Pane */
-.sandbox-preview {
-    flex: 1; 
+.sidebar-header {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 12px 20px;
+    letter-spacing: 1px;
+    color: var(--ide-text-muted);
+}
+
+.file-tree {
     display: flex;
     flex-direction: column;
-    background-color: var(--sb-preview-bg); 
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    font-size: 13px;
+    cursor: pointer;
+    user-select: none;
+    color: var(--ide-text-main);
+    transition: background-color 0.2s ease;
+}
+
+.file-item:hover {
+    background-color: var(--ide-bg-hover);
+}
+
+.file-item.active {
+    background-color: var(--ide-bg-tab-active);
+    color: var(--ide-text-active);
+    border-left: 2px solid var(--ide-accent);
+}
+
+/* --- Editor Area --- */
+.ide-editor-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0; 
+}
+
+.editor-tabs {
+    display: flex;
+    background-color: var(--ide-bg-tabs);
+    height: 40px;
+    transition: background-color 0.3s ease;
+}
+
+.tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 20px;
+    background-color: var(--ide-bg-tabs);
+    color: var(--ide-text-muted);
+    font-size: 13px;
+    cursor: pointer;
+    border-right: 1px solid var(--ide-border);
+    border-top: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.tab:hover {
+    background-color: var(--ide-bg-hover);
+}
+
+.tab.active {
+    background-color: var(--ide-bg-tab-active);
+    color: var(--ide-text-active);
+    border-top: 2px solid var(--ide-accent);
+}
+
+.editor-container {
+    flex: 1;
+    background-color: var(--ide-bg-main);
+}
+
+/* --- Preview Area --- */
+.ide-preview-section {
+    width: 40%;
+    background-color: var(--ide-bg-main);
+    border-left: 1px solid var(--ide-border);
+    display: flex;
+    flex-direction: column;
 }
 
 .preview-header {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
     height: 40px;
-    padding: 0 1rem;
-    background-color: var(--sb-header);
-    border-bottom: 1px solid var(--sb-border);
-    color: var(--sb-text);
-    font-size: 0.85rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-.preview-iframe {
-    flex: 1;
-    width: 100%;
-    border: none;
-    background-color: var(--sb-preview-bg); 
-}
-
-/* --- Buttons --- */
-.btn-primary {
-    background-color: #3b82f6;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-weight: 500;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.btn-primary:hover {
-    background-color: #2563eb;
-}
-
-.btn-icon {
+    background-color: var(--ide-bg-sidebar);
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 4px;
-    border: none;
-    background: transparent;
-    color: var(--sb-text-muted);
-    cursor: pointer;
-    transition: all 0.2s;
+    justify-content: space-between;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--ide-border);
 }
 
-.btn-icon:hover {
-    background-color: var(--sb-hover);
-    color: var(--sb-text-title);
+.browser-dots {
+    display: flex;
+    gap: 6px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+.dot.red { background-color: #ff5f56; }
+.dot.yellow { background-color: #ffbd2e; }
+.dot.green { background-color: #27c93f; }
+
+.browser-url {
+    background-color: var(--ide-search-bg);
+    padding: 4px 30px;
+    border-radius: 4px;
+    font-size: 11px;
+    color: var(--ide-text-muted);
+    border: 1px solid var(--ide-border);
+}
+
+.preview-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ide-text-muted);
+    letter-spacing: 0.5px;
+}
+
+.play-icon {
+    color: #10b981;
+}
+
+.iframe-container {
+    flex: 1;
+    background-color: #ffffff; /* Must remain white so HTML previews look normal */
 }
