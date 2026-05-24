@@ -1,18 +1,15 @@
+// backend/models/Project.js
 import mongoose from 'mongoose';
 
 const projectSchema = new mongoose.Schema({
-    // Links this specific code directly to the logged-in user
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+    userId: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User', 
+        required: true 
     },
-    // The actual code files
-    files: [{
-        name: String,
-        language: String,
-        value: String
-    }]
+    html: { type: String, default: '' },
+    css: { type: String, default: '' },
+    js: { type: String, default: '' }
 }, { timestamps: true });
 
 export default mongoose.model('Project', projectSchema);
