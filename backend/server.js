@@ -14,6 +14,9 @@ dotenv.config();
 
 const app = express();
 
+// ✨ THE FIX: Tell Express to trust Render's reverse proxy for the rate limiter
+app.set('trust proxy', 1);
+
 // ==========================================
 // 🛡️ SECURITY MIDDLEWARE PIPELINE
 // ==========================================
