@@ -1,4 +1,3 @@
-// src/pages/Dashboard/index.jsx
 import { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { Shield, Monitor, Smartphone, LogOut, Code, Trash2 } from 'lucide-react';
@@ -42,12 +41,10 @@ const Dashboard = () => {
     const { user, logout } = useContext(AuthContext);
     const navigate = useNavigate();
 
-    // ✨ LIVE DATA STATE
     const [sessions, setSessions] = useState([]);
     const [currentSessionId, setCurrentSessionId] = useState('');
     const [isLoading, setIsLoading] = useState(true);
 
-    // ✨ FETCH LIVE SESSIONS FROM MONGODB
     useEffect(() => {
         const fetchSessions = async () => {
             try {
@@ -63,7 +60,6 @@ const Dashboard = () => {
         fetchSessions();
     }, []);
 
-    // ✨ KILL A SESSION INSTANTLY
     const handleRevoke = async (tokenId) => {
         try {
             const res = await api.delete(`/auth/sessions/${tokenId}`);
@@ -85,97 +81,112 @@ const Dashboard = () => {
 
     if (isLoading) return <Loader message="Loading security details..." />;
 
+    // Extract first letter for the Avatar
+    const userInitial = user?.email ? user.email.charAt(0).toUpperCase() : 'U';
+
     return (
-        <div className="dashboard-wrapper">
-            <header className="dashboard-header">
-                <div>
-                    <h1 className="dashboard-header-title">Security Dashboard</h1>
-                    <p className="dashboard-header-subtitle">Manage your account and active sessions</p>
-                </div>
-                <div className="dashboard-actions">
-                    <ThemeToggle />
-                    <button onClick={() => navigate('/')} className="btn-success">
-                        <Code size={18} /> Open Sandbox
-                    </button>
-                    <button onClick={handleLogout} className="btn-danger">
-                        <LogOut size={18} /> Sign Out
-                    </button>
-                </div>
-            </header>
-
-            <div className="dashboard-card account-status">
-                <div className="account-icon-bg">
-                    <Shield size={32} color="var(--accent-color)" />
-                </div>
-                <div>
-                    <h3 className="account-title">Account Status</h3>
-                    <p className="account-email">Logged in as: <strong>{user?.email}</strong></p>
-                </div>
-            </div>
-
-            <div className="dashboard-card">
-                <h3 style={{ marginBottom: '1rem' }}>Active Sessions</h3>
-                <p className="dashboard-header-subtitle" style={{ fontSize: '0.9rem' }}>
-                    Monitor and revoke devices currently logged into your account.
-                </p>
+        <div className="premium-dashboard-wrapper">
+            <div className="dashboard-container">
                 
-                {/* ✨ Wrapped in a div with overflowX to prevent mobile squishing */}
-                <div style={{ overflowX: 'auto', width: '100%' }}>
-                    <table className="session-table" style={{ minWidth: '600px' }}>
-                        <thead>
-                            <tr>
-                                <th>Device</th>
-                                <th>Location / IP</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {sessions.map(session => {
-                                const device = parseDevice(session.device);
-                                const isCurrent = session.tokenId === currentSessionId;
-                                
-                                return (
-                                    <tr key={session.tokenId}>
-                                        <td className="device-cell">
-                                            {device.type === 'mobile' ? 
-                                                <Smartphone size={20} color="var(--text-secondary)" /> : 
-                                                <Monitor size={20} color="var(--text-secondary)" />
-                                            }
-                                            {device.text}
-                                        </td>
-                                        <td>
-                                            {session.ipAddress === '::1' || session.ipAddress === '127.0.0.1' 
-                                                ? '127.0.0.1 (Local)' 
-                                                : session.ipAddress}
-                                        </td>
-                                        <td>
-                                            {isCurrent ? (
-                                                <span className="badge badge-active">Current Session</span>
-                                            ) : (
-                                                <span className="session-inactive-text">Last active {timeAgo(session.loginTime)}</span>
-                                            )}
-                                        </td>
-                                        <td>
-                                            {/* ✨ Don't allow revoking the current session from the table to prevent accidents */}
-                                            {isCurrent ? (
-                                                <span style={{ color: 'var(--text-secondary)' }}>—</span>
-                                            ) : (
-                                                <button 
-                                                    onClick={() => handleRevoke(session.tokenId)} 
-                                                    className="btn-danger btn-danger-small"
-                                                    style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
-                                                >
-                                                    <Trash2 size={14} /> Revoke
-                                                </button>
-                                            )}
-                                        </td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
+                {/* Header Section */}
+                <header className="premium-header">
+                    <div className="header-text">
+                        <h1 className="header-title">Security Dashboard</h1>
+                        <p className="header-subtitle">Manage your account and active sessions securely.</p>
+                    </div>
+                    <div className="header-actions">
+                        <ThemeToggle />
+                        <button onClick={() => navigate('/')} className="btn-premium-primary">
+                            <Code size={18} /> Open Sandbox
+                        </button>
+                        <button onClick={handleLogout} className="btn-premium-secondary">
+                            <LogOut size={18} /> Sign Out
+                        </button>
+                    </div>
+                </header>
+
+                {/* Account Status Card */}
+                <div className="premium-card account-card">
+                    <div className="avatar-circle">
+                        {userInitial}
+                    </div>
+                    <div className="account-details">
+                        <span className="account-label">ACCOUNT STATUS</span>
+                        <h2 className="account-email">{user?.email}</h2>
+                    </div>
+                    <div className="shield-watermark">
+                        <Shield size={120} strokeWidth={1} />
+                    </div>
                 </div>
+
+                {/* Active Sessions Card */}
+                <div className="premium-card sessions-card">
+                    <div className="sessions-header">
+                        <h3>Active Sessions</h3>
+                        <p>Monitor and revoke devices currently logged into your account.</p>
+                    </div>
+                    
+                    <div className="table-responsive">
+                        <table className="premium-table">
+                            <thead>
+                                <tr>
+                                    <th>Device</th>
+                                    <th>Location / IP</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {sessions.map(session => {
+                                    const device = parseDevice(session.device);
+                                    const isCurrent = session.tokenId === currentSessionId;
+                                    
+                                    return (
+                                        <tr key={session.tokenId} className="table-row">
+                                            <td className="device-info">
+                                                <div className="device-icon">
+                                                    {device.type === 'mobile' ? 
+                                                        <Smartphone size={18} /> : 
+                                                        <Monitor size={18} />
+                                                    }
+                                                </div>
+                                                <span className="device-text">{device.text}</span>
+                                            </td>
+                                            <td className="ip-info">
+                                                {session.ipAddress === '::1' || session.ipAddress === '127.0.0.1' 
+                                                    ? '127.0.0.1 (Local)' 
+                                                    : session.ipAddress}
+                                            </td>
+                                            <td>
+                                                {isCurrent ? (
+                                                    <div className="status-badge active">
+                                                        <span className="pulse-dot"></span>
+                                                        Current Session
+                                                    </div>
+                                                ) : (
+                                                    <span className="status-text">Last active {timeAgo(session.loginTime)}</span>
+                                                )}
+                                            </td>
+                                            <td>
+                                                {isCurrent ? (
+                                                    <span className="no-action">—</span>
+                                                ) : (
+                                                    <button 
+                                                        onClick={() => handleRevoke(session.tokenId)} 
+                                                        className="btn-revoke"
+                                                    >
+                                                        <Trash2 size={16} /> Revoke
+                                                    </button>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </div>
     );
