@@ -1,79 +1,46 @@
-// src/pages/Sandbox/index.jsx
-import { useState, useContext, useEffect } from 'react';
-import { AuthContext } from '../../context/AuthContext';
+import React, { useState, useEffect, useContext } from 'react';
 import Editor from '@monaco-editor/react';
-import { FileType2, FileJson, Play, Save, LogOut, MonitorPlay, Home, AlertCircle } from 'lucide-react';
+import { FileCode2, FileJson, FileType2, Play, Save, LayoutDashboard, MonitorPlay } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../services/api';
-import ThemeToggle from '../../components/ThemeToggle';
-import Loader from '../../components/Loader'; 
+import { AuthContext } from '../../context/AuthContext';
+import ThemeToggle from '../../components/ThemeToggle'; // Brings in your theme switcher
 import './index.css';
 
-const Sandbox = () => {
-    const { user, logout } = useContext(AuthContext);
+const Workspace = () => {
+    const { user } = useContext(AuthContext);
     const navigate = useNavigate();
     
-    const [activeTab, setActiveTab] = useState('html');
-    const [srcDoc, setSrcDoc] = useState('');
-    const [isSaving, setIsSaving] = useState(false);
-    const [isFetching, setIsFetching] = useState(true); 
-    const [saveError, setSaveError] = useState(''); 
-    
-    // ✨ NEW: State to track the Monaco Editor theme dynamically
-    const [editorTheme, setEditorTheme] = useState('vs-dark');
+    const [activeFile, setActiveFile] = useState('html');
+    const [monacoTheme, setMonacoTheme] = useState('vs-dark');
     
     const [files, setFiles] = useState({
-        html: '<div class="welcome">\n  <h1>Secure Sandbox</h1>\n  <p>Start coding...</p>\n</div>',
-        css: 'body {\n  margin: 0;\n  padding: 2rem;\n  font-family: system-ui;\n}\n\n.welcome h1 {\n  color: #3b82f6;\n}',
-        js: 'console.log("Protected workspace loaded successfully.");'
+        html: '<div class="welcome">\n  <h1>Welcome Bhanu</h1>\n  <p>Start coding your premium app.</p>\n</div>',
+        css: '.welcome {\n  font-family: system-ui, sans-serif;\n  text-align: center;\n  color: #333;\n  margin-top: 3rem;\n}\n\nh1 {\n  color: #4f46e5;\n}',
+        js: 'console.log("Premium Workspace Initialized!");'
     });
 
-    // ✨ NEW: The "Theme Watcher"
-    // This watches your HTML body. When ThemeToggle clicks, this catches it and updates the editor!
+    const [srcDoc, setSrcDoc] = useState('');
+
+    // ✨ THEME SYNC: Watches your global app theme and updates Monaco Editor
     useEffect(() => {
         const checkTheme = () => {
-            // Checks common light-mode classes/attributes
-            const isLight = document.body.classList.contains('light') || 
-                            document.documentElement.classList.contains('light') ||
-                            document.body.classList.contains('light-mode') ||
-                            document.documentElement.getAttribute('data-theme') === 'light';
-            
-            setEditorTheme(isLight ? 'light' : 'vs-dark');
+            const isDark = document.body.classList.contains('dark') || 
+                           document.body.classList.contains('dark-mode') || 
+                           document.documentElement.getAttribute('data-theme') === 'dark';
+            setMonacoTheme(isDark ? 'vs-dark' : 'light');
         };
+        
+        checkTheme(); // Run on mount
 
-        checkTheme(); // Check on load
-
-        // Set up the observer to watch for changes continuously
+        // Listen for class changes on the body/html tags when ThemeToggle is clicked
         const observer = new MutationObserver(checkTheme);
-        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'data-theme'] });
         observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
+        
         return () => observer.disconnect();
     }, []);
 
-    // Load project data
-    useEffect(() => {
-        const fetchProject = async () => {
-            setIsFetching(true); 
-            try {
-                const res = await api.get('/projects/load');
-                if (res.data.files && res.data.files.length > 0) {
-                    const loadedFiles = {};
-                    res.data.files.forEach(f => {
-                        loadedFiles[f.language] = f.value;
-                    });
-                    setFiles(loadedFiles);
-                }
-            } catch (err) {
-                console.error("Failed to load project", err);
-            } finally {
-                setIsFetching(false); 
-            }
-        };
-        fetchProject();
-    }, []);
-
-    // Compiler Engine
+    // Live preview debounce
     useEffect(() => {
         const timeout = setTimeout(() => {
             setSrcDoc(`
@@ -84,117 +51,131 @@ const Sandbox = () => {
                     </head>
                     <body>
                         ${files.html}
-                        <script>${files.js}<\/script>
+                        <script>${files.js}</script>
                     </body>
                 </html>
             `);
-        }, 400); 
+        }, 300);
         return () => clearTimeout(timeout);
     }, [files]);
 
-    // Save logic
-    const handleSave = async () => {
-        setIsSaving(true);
-        setSaveError('');
-        try {
-            const payload = [
-                { name: 'index.html', language: 'html', value: files.html },
-                { name: 'styles.css', language: 'css', value: files.css },
-                { name: 'script.js', language: 'js', value: files.js }
-            ];
-            await api.post('/projects/save', { files: payload });
-            setTimeout(() => setIsSaving(false), 1000);
-        } catch (err) {
-            setSaveError(err.response?.data?.error || err.message || "Network Error");
-            setIsSaving(false);
-        }
+    const handleEditorChange = (value) => {
+        setFiles(prev => ({ ...prev, [activeFile]: value }));
     };
 
-    const handleLogout = async () => {
-        await logout();
-        navigate('/login');
+    const getLanguage = () => {
+        if (activeFile === 'js') return 'javascript';
+        return activeFile;
     };
 
     return (
-        <>
-            {isFetching && <Loader message="Loading your workspace..." />}
+        <div className="premium-ide-wrapper">
+            {/* Top Navigation Bar */}
+            <nav className="ide-topbar">
+                <div className="topbar-left">
+                    <MonitorPlay size={18} className="brand-icon" />
+                    <span className="brand-text">Developer Workspace</span>
+                </div>
+                <div className="topbar-center">
+                    <div className="search-bar">Bhanu-0852 / Browser-Based-Coding-Sandbox</div>
+                </div>
+                <div className="topbar-right">
+                    <span className="user-email">{user?.email || 'Guest'}</span>
+                    <ThemeToggle /> {/* Added Theme Switcher */}
+                    <button className="btn-ide btn-save">
+                        <Save size={14} /> Save Project
+                    </button>
+                    <button onClick={() => navigate('/dashboard')} className="btn-ide btn-dashboard">
+                        <LayoutDashboard size={14} /> Dashboard
+                    </button>
+                </div>
+            </nav>
 
-            <div className="sandbox-layout">
-                <header className="sandbox-header">
-                    <div className="sandbox-header-left">
-                        <MonitorPlay size={24} color="var(--accent-color)" />
-                        <h2 className="sandbox-title">Developer Workspace</h2>
+            <div className="ide-main">
+                {/* Left Sidebar (Explorer) */}
+                <aside className="ide-sidebar">
+                    <div className="sidebar-header">EXPLORER</div>
+                    <div className="file-tree">
+                        <div 
+                            className={`file-item ${activeFile === 'html' ? 'active' : ''}`}
+                            onClick={() => setActiveFile('html')}
+                        >
+                            <FileCode2 size={16} color="#e34c26" /> index.html
+                        </div>
+                        <div 
+                            className={`file-item ${activeFile === 'css' ? 'active' : ''}`}
+                            onClick={() => setActiveFile('css')}
+                        >
+                            <FileType2 size={16} color="#264de4" /> styles.css
+                        </div>
+                        <div 
+                            className={`file-item ${activeFile === 'js' ? 'active' : ''}`}
+                            onClick={() => setActiveFile('js')}
+                        >
+                            <FileJson size={16} color="#f7df1e" /> script.js
+                        </div>
+                    </div>
+                </aside>
+
+                {/* Center Editor Area */}
+                <section className="ide-editor-section">
+                    <div className="editor-tabs">
+                        <div className={`tab ${activeFile === 'html' ? 'active' : ''}`} onClick={() => setActiveFile('html')}>
+                            <FileCode2 size={14} color="#e34c26" /> index.html
+                        </div>
+                        <div className={`tab ${activeFile === 'css' ? 'active' : ''}`} onClick={() => setActiveFile('css')}>
+                            <FileType2 size={14} color="#264de4" /> styles.css
+                        </div>
+                        <div className={`tab ${activeFile === 'js' ? 'active' : ''}`} onClick={() => setActiveFile('js')}>
+                            <FileJson size={14} color="#f7df1e" /> script.js
+                        </div>
                     </div>
                     
-                    <div className="sandbox-header-right">
-                        <ThemeToggle />
-                        <span className="user-email-display">{user?.email}</span>
-                        
-                        <button onClick={() => navigate('/dashboard')} className="btn-icon" title="Dashboard">
-                            <Home size={20} />
-                        </button>
-                        
-                        {saveError && (
-                            <span style={{ color: '#ef4444', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '0.25rem', backgroundColor: '#fef2f2', padding: '0.25rem 0.5rem', borderRadius: '4px' }}>
-                                <AlertCircle size={14} /> {saveError}
-                            </span>
-                        )}
-
-                        <button onClick={handleSave} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', width: 'auto', padding: '0.5rem 1rem' }}>
-                            <Save size={16} /> {isSaving ? 'Saved!' : 'Save Project'}
-                        </button>
-                        
-                        <button onClick={handleLogout} className="btn-icon" title="Logout">
-                            <LogOut size={20} />
-                        </button>
-                    </div>
-                </header>
-
-                <main className="sandbox-workspace">
-                    <aside className="sandbox-sidebar">
-                        <h3 className="sidebar-title">Explorer</h3>
-                        <button className={`file-tab ${activeTab === 'html' ? 'active' : ''}`} onClick={() => setActiveTab('html')}>
-                            <FileType2 size={16} /> index.html
-                        </button>
-                        <button className={`file-tab ${activeTab === 'css' ? 'active' : ''}`} onClick={() => setActiveTab('css')}>
-                            <FileType2 size={16} /> styles.css
-                        </button>
-                        <button className={`file-tab ${activeTab === 'js' ? 'active' : ''}`} onClick={() => setActiveTab('js')}>
-                            <FileJson size={16} /> script.js
-                        </button>
-                    </aside>
-
-                    <section className="sandbox-editor">
+                    <div className="editor-container">
                         <Editor
                             height="100%"
-                            theme={editorTheme} // ✨ THE FIX: Now completely dynamic based on state!
-                            language={activeTab === 'js' ? 'javascript' : activeTab}
-                            value={files[activeTab]}
-                            onChange={(val) => setFiles(prev => ({ ...prev, [activeTab]: val }))}
-                            options={{ 
-                                minimap: { enabled: false }, 
-                                padding: { top: 16 },
-                                fontSize: 15,
-                                wordWrap: 'on'
+                            language={getLanguage()}
+                            theme={monacoTheme}
+                            value={files[activeFile]}
+                            onChange={handleEditorChange}
+                            options={{
+                                minimap: { enabled: false },
+                                fontSize: 14,
+                                wordWrap: 'on',
+                                automaticLayout: true,
+                                padding: { top: 16 }
                             }}
                         />
-                    </section>
+                    </div>
+                </section>
 
-                    <section className="sandbox-preview">
-                        <div className="preview-header">
-                            <Play size={16} color="var(--accent-color)" /> Live Preview
+                {/* Right Live Preview Area */}
+                <section className="ide-preview-section">
+                    <div className="preview-header">
+                        <div className="browser-dots">
+                            <span className="dot red"></span>
+                            <span className="dot yellow"></span>
+                            <span className="dot green"></span>
                         </div>
-                        <iframe 
-                            srcDoc={srcDoc} 
+                        <div className="browser-url">localhost:3000</div>
+                        <div className="preview-title">
+                            <Play size={14} className="play-icon" /> LIVE PREVIEW
+                        </div>
+                    </div>
+                    <div className="iframe-container">
+                        <iframe
+                            srcDoc={srcDoc}
                             title="output"
-                            sandbox="allow-scripts" 
-                            className="preview-iframe"
+                            sandbox="allow-scripts"
+                            width="100%"
+                            height="100%"
+                            frameBorder="0"
                         />
-                    </section>
-                </main>
+                    </div>
+                </section>
             </div>
-        </>
+        </div>
     );
 };
 
-export default Sandbox;
+export default Workspace;
