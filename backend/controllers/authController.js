@@ -2,7 +2,7 @@ import User from '../models/User.js';
 import OTP from '../models/OTP.js'; 
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import crypto from 'crypto'; // ✨ NEW: For generating unique Session IDs
+import crypto from 'crypto';
 import { sendEmail } from '../utils/sendEmail.js';
 
 // ✨ UPDATE: Pass the sessionId into the JWT payload
@@ -36,10 +36,22 @@ export const sendOTP = async (req, res) => {
         // Save the new OTP to the database
         await OTP.create({ email, otp });
 
-        // Send the real email via Nodemailer
-        await sendEmail(email, otp); 
+        // ✨ THE FIX: Handle Render's SMTP Block Gracefully
+        try {
+            // Attempt to send the real email via Nodemailer
+            await sendEmail(email, otp); 
+            res.status(200).json({ message: 'OTP sent successfully' });
+        } catch (mailError) {
+            console.error("🚨 Render SMTP Blocked. Demo OTP is:", otp);
+            
+            // Return 200 OK so the frontend UI moves forward instead of crashing.
+            // Sending demoOtp in the payload allows recruiters to easily test the app.
+            res.status(200).json({ 
+                message: 'OTP generated (SMTP blocked by host). Check console or use demo code.',
+                demoOtp: otp 
+            });
+        }
 
-        res.status(200).json({ message: 'OTP sent successfully' });
     } catch (error) {
         console.error("🔥 OTP GENERATION CRASH:", error);
         res.status(500).json({ error: 'Server error generating OTP' });
