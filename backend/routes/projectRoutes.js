@@ -1,7 +1,7 @@
+// backend/routes/projectRoutes.js
 import express from 'express';
 import { saveProject, loadProject } from '../controllers/projectController.js';
-// ✨ THE FIX: Import the exact middleware we built earlier
-import { protect } from '../middleware/requireAuth.js';
+import { protect } from '../middleware/requireAuth.js'; // Ensure you have this middleware!
 
 const router = express.Router();
 
@@ -9,10 +9,10 @@ const router = express.Router();
 // By placing this here, EVERY route below it requires a valid HttpOnly JWT cookie.
 router.use(protect);
 
-// GET /api/projects/load
-router.get('/load', loadProject);
+// 📂 GET /api/projects (Loads the project on boot)
+router.get('/', loadProject);
 
-// POST /api/projects/save
+// 💾 POST /api/projects/save (Saves the project)
 router.post('/save', saveProject);
 
 export default router;
