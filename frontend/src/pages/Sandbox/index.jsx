@@ -7,7 +7,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import ThemeToggle from '../../components/ThemeToggle'; 
-import api from '../../services/api'; // ✨ Import your API service
+import api from '../../services/api';
 import './index.css';
 
 const Sandbox = () => {
@@ -16,50 +16,46 @@ const Sandbox = () => {
     
     const [activeFile, setActiveFile] = useState('html');
     const [monacoTheme, setMonacoTheme] = useState('vs-dark'); 
-    
-    // ✨ Track saving status for a premium button animation
     const [isSaving, setIsSaving] = useState(false);
     
+    // ✨ COOL PREFILLED DEFAULT CODE
+    const defaultCode = {
+        html: `<div class="card">\n  <div class="avatar-container">\n    <img src="https://avatars.githubusercontent.com/u/9919?v=4" alt="Avatar" class="avatar" />\n  </div>\n  <h2>Bhanu Prakash Reddy</h2>\n  <p>Full-Stack MERN Developer</p>\n  <div class="tech-stack">\n    <span>React</span>\n    <span>Node.js</span>\n    <span>MongoDB</span>\n  </div>\n  <button id="connectBtn">Connect with me</button>\n</div>`,
+        css: `body {\n  background: #0f172a;\n  color: white;\n  font-family: 'Inter', system-ui, sans-serif;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100vh;\n  margin: 0;\n}\n\n.card {\n  background: #1e293b;\n  padding: 2.5rem 2rem;\n  border-radius: 1rem;\n  text-align: center;\n  border: 1px solid #334155;\n  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);\n  transition: transform 0.3s ease;\n  width: 300px;\n}\n\n.card:hover {\n  transform: translateY(-5px);\n  border-color: #3b82f6;\n}\n\n.avatar {\n  width: 90px;\n  border-radius: 50%;\n  border: 3px solid #3b82f6;\n  box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);\n}\n\nh2 {\n  margin: 1rem 0 0.25rem;\n  font-size: 1.25rem;\n}\n\np {\n  color: #94a3b8;\n  margin: 0 0 1.5rem;\n  font-size: 0.9rem;\n}\n\n.tech-stack {\n  display: flex;\n  gap: 0.5rem;\n  justify-content: center;\n  margin-bottom: 1.5rem;\n}\n\n.tech-stack span {\n  background: #334155;\n  padding: 0.25rem 0.75rem;\n  border-radius: 99px;\n  font-size: 0.75rem;\n  font-weight: 600;\n}\n\nbutton {\n  background: #3b82f6;\n  color: white;\n  border: none;\n  padding: 0.75rem 1.5rem;\n  border-radius: 0.5rem;\n  cursor: pointer;\n  font-weight: 600;\n  width: 100%;\n  transition: background 0.2s;\n}\n\nbutton:hover {\n  background: #2563eb;\n}`,
+        js: `const btn = document.getElementById('connectBtn');\n\nbtn.addEventListener('click', () => {\n  btn.innerText = 'Connected!';\n  btn.style.background = '#10b981';\n  console.log('Connection established successfully.');\n});`
+    };
+
     const [files, setFiles] = useState({
-        html: '<div class="welcome">\n  <h1>Welcome Bhanu</h1>\n  <p>Loading your project...</p>\n</div>',
-        css: '',
+        html: '<div class="loading">Loading your workspace...</div>',
+        css: '.loading { color: #888; text-align: center; margin-top: 2rem; font-family: sans-serif; }',
         js: ''
     });
 
     const [srcDoc, setSrcDoc] = useState('');
 
-    // ✨ FETCH SAVED PROJECT ON LOAD
     useEffect(() => {
         const fetchProject = async () => {
             try {
                 const res = await api.get('/projects');
                 setFiles({
-                    html: res.data.html || '',
-                    css: res.data.css || '',
-                    js: res.data.js || ''
+                    html: res.data.html || defaultCode.html,
+                    css: res.data.css || defaultCode.css,
+                    js: res.data.js || defaultCode.js
                 });
-                console.log("Project loaded securely from database!");
             } catch (error) {
-                // If 404 (no project yet), set default premium text
                 if (error.response?.status === 404) {
-                    setFiles({
-                        html: '<div class="welcome">\n  <h1>Welcome Bhanu</h1>\n  <p>Your True VS Code IDE.</p>\n</div>',
-                        css: '.welcome {\n  font-family: system-ui, sans-serif;\n  text-align: center;\n  color: #333;\n  margin-top: 3rem;\n}\n\nh1 {\n  color: #007acc;\n}',
-                        js: 'console.log("VS Code Sandbox Initialized!");'
-                    });
+                    setFiles(defaultCode);
                 }
             }
         };
         fetchProject();
     }, []);
 
-    // ✨ SAVE PROJECT TO DATABASE
     const handleSave = async () => {
         setIsSaving(true);
         try {
             await api.post('/projects/save', files);
-            // Visual feedback that it saved
-            setTimeout(() => setIsSaving(false), 1000); 
+            setTimeout(() => setIsSaving(false), 800); 
         } catch (error) {
             console.error("Save failed", error);
             setIsSaving(false);
@@ -67,7 +63,6 @@ const Sandbox = () => {
         }
     };
 
-    // Theme Sync
     useEffect(() => {
         const checkTheme = () => {
             const isDark = document.body.classList.contains('dark') || 
@@ -178,23 +173,17 @@ const Sandbox = () => {
                             </div>
                         </div>
                         
-                        {/* ✨ Action Buttons (Run & Save) */}
-                        <div className="tab-actions" style={{ gap: '8px' }}>
-                            <button className="vsc-run-button" onClick={handleRun}>
-                                <Play size={14} fill="currentColor" /> Run
+                        {/* ✨ FIXED ALIGNMENT: Sleek Action Buttons */}
+                        <div className="tab-actions">
+                            <button className="vsc-action-btn run-btn" onClick={handleRun}>
+                                <Play size={12} fill="currentColor" /> Run
                             </button>
                             
-                            {/* ✨ The Working Save Button */}
-                            <button 
-                                className="vsc-run-button" 
-                                onClick={handleSave} 
-                                disabled={isSaving}
-                                style={{ backgroundColor: isSaving ? '#007acc' : 'var(--vsc-run-btn)' }}
-                            >
+                            <button className="vsc-action-btn save-btn" onClick={handleSave} disabled={isSaving}>
                                 {isSaving ? (
-                                    <><Loader2 size={14} className="animate-spin" /> Saving...</>
+                                    <><Loader2 size={12} className="animate-spin" /> Saving</>
                                 ) : (
-                                    <><Save size={14} /> Save</>
+                                    <><Save size={12} /> Save</>
                                 )}
                             </button>
                         </div>
@@ -211,7 +200,8 @@ const Sandbox = () => {
                                 minimap: { enabled: false },
                                 fontSize: 14,
                                 wordWrap: 'on',
-                                padding: { top: 16 }
+                                padding: { top: 16 },
+                                scrollBeyondLastLine: false
                             }}
                         />
                     </div>
